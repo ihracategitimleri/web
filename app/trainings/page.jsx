@@ -3,7 +3,8 @@ import { supabase } from "@/lib/supabaseClient"
 export default async function TrainingsPage() {
   const { data: trainings } = await supabase
     .from("trainings")
-    .select("id, title, date, is_online, price, url")
+    .select("id, kurum, egitim, tarih, saat, egitmen, ucret, link")
+    .order("tarih", { ascending: true })
 
   return (
     <div style={{ padding: 40 }}>
@@ -11,11 +12,12 @@ export default async function TrainingsPage() {
 
       {trainings?.map(t => (
         <div key={t.id} style={{ marginBottom: 20 }}>
-          <h3>{t.title}</h3>
-          <p>Tarih: {t.date}</p>
-          <p>Online: {t.is_online ? "Evet" : "Hayır"}</p>
-          <p>Fiyat: {t.price || "Ücretsiz"}</p>
-          <a href={t.url} target="_blank">Detay</a>
+          <h3>{t.egitim}</h3>
+          <p>Kurum: {t.kurum}</p>
+          <p>Tarih: {t.tarih}{t.saat ? ` ${t.saat}` : ""}</p>
+          <p>Eğitmen: {t.egitmen}</p>
+          <p>Ücret: {t.ucret && t.ucret.trim() !== "0" ? t.ucret : "Ücretsiz"}</p>
+          <a href={t.link} target="_blank">Detay</a>
         </div>
       ))}
     </div>

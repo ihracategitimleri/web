@@ -1,4 +1,5 @@
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google"
+import { getTrainings } from "@/lib/getTrainings"
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -13,65 +14,30 @@ const mono = IBM_Plex_Mono({
   weight: ["400", "500"],
 })
 
-type Egitim = {
-  kurum: string
-  kod: string
-  konu: string
-  tarih: string
-  egitmen: string
-  durum: "Açık" | "Yakında" | "Dolu"
+const aylar = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
+
+function formatTarih(tarih: string, saat: string | null) {
+  const [y, m, d] = tarih.split("-").map(Number)
+  const tarihStr = `${d} ${aylar[m - 1]} ${y}`
+  return saat ? `${tarihStr} · ${saat.slice(0, 5)}` : tarihStr
 }
 
-const egitimler: Egitim[] = [
-  {
-    kurum: "TOBB",
-    kod: "TOBB-04",
-    konu: "Dış Ticaret Temelleri",
-    tarih: "12 Ağu 2026",
-    egitmen: "Ahmet Yılmaz",
-    durum: "Açık",
-  },
-  {
-    kurum: "TİM",
-    kod: "TIM-02",
-    konu: "İhracat Finansmanı",
-    tarih: "15 Ağu 2026",
-    egitmen: "Selin Kaya",
-    durum: "Yakında",
-  },
-  {
-    kurum: "DEİK",
-    kod: "DEIK-07",
-    konu: "Hedef Pazar Araştırması",
-    tarih: "19 Ağu 2026",
-    egitmen: "Murat Er",
-    durum: "Açık",
-  },
-  {
-    kurum: "Tic. Bakanlığı",
-    kod: "TB-11",
-    konu: "Gümrük Mevzuatı ve Belgeler",
-    tarih: "22 Ağu 2026",
-    egitmen: "Ayşe Demir",
-    durum: "Dolu",
-  },
-  {
-    kurum: "İTO",
-    kod: "ITO-03",
-    konu: "E-İhracat ve Pazaryerleri",
-    tarih: "27 Ağu 2026",
-    egitmen: "Deniz Aksoy",
-    durum: "Açık",
-  },
-]
-
-const durumStil: Record<Egitim["durum"], string> = {
-  Açık: "border-emerald-600 text-emerald-700",
-  Yakında: "border-[#B5490C] text-[#B5490C]",
-  Dolu: "border-slate-400 text-slate-500",
+function ucretMetni(ucret: string | null) {
+  const deger = ucret?.trim()
+  return !deger || deger === "0" ? "ÜCRETSİZ" : deger
 }
 
-export default function Home() {
+export default async function Home() {
+  const egitimler = await getTrainings()
+
+  const kurumSayisi = new Set(egitimler.map((e) => e.kurum)).size
+  const aktifEgitimSayisi = egitimler.length
+  const now = new Date()
+  const buAyPlanlanan = egitimler.filter((e) => {
+    const [y, m] = e.tarih.split("-").map(Number)
+    return y === now.getFullYear() && m === now.getMonth() + 1
+  }).length
+
   return (
     <div className={`${body.className} min-h-screen flex flex-col bg-[#EEF1EC] text-[#0E1A2B]`}>
       <style>{`
@@ -128,16 +94,16 @@ export default function Home() {
             {/* STAT LEDGER */}
             <div className={`${mono.className} flex flex-wrap gap-x-8 gap-y-3 text-sm border-t border-b border-[#0E1A2B]/10 py-4 max-w-lg`}>
               <div>
-                <span className="text-xl font-medium">6</span>
+                <span className="text-xl font-medium">{kurumSayisi}</span>
                 <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Kurum</span>
               </div>
               <div>
-                <span className="text-xl font-medium">42</span>
+                <span className="text-xl font-medium">{aktifEgitimSayisi}</span>
                 <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Aktif eğitim</span>
               </div>
               <div>
-                <span className="text-xl font-medium">128</span>
-                <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Bu ay katılımcı</span>
+                <span className="text-xl font-medium">{buAyPlanlanan}</span>
+                <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Bu ay planlanan eğitim</span>
               </div>
             </div>
           </div>
@@ -229,30 +195,34 @@ export default function Home() {
                   <th className="py-3 pr-4 text-left font-medium">Konu</th>
                   <th className="py-3 pr-4 text-left font-medium">Tarih</th>
                   <th className="py-3 pr-4 text-left font-medium">Eğitmen</th>
-                  <th className="py-3 pr-4 text-left font-medium">Durum</th>
+                  <th className="py-3 pr-4 text-left font-medium">Ücret</th>
                 </tr>
               </thead>
               <tbody>
-                {egitimler.map((e) => (
-                  <tr key={e.kod} className="border-b border-[#0E1A2B]/8 hover:bg-[#EEF1EC]/50 transition-colors">
-                    <td className="py-4 pr-4">
-                      <span className={`${mono.className} inline-block text-[11px] bg-[#0E2A47] text-white rounded px-2 py-1`}>
-                        {e.kod}
-                      </span>
-                      <span className="block text-xs text-[#0E1A2B]/50 mt-1">{e.kurum}</span>
-                    </td>
-                    <td className="py-4 pr-4 text-sm">{e.konu}</td>
-                    <td className={`${mono.className} py-4 pr-4 text-sm text-[#0E1A2B]/70`}>{e.tarih}</td>
-                    <td className="py-4 pr-4 text-sm">{e.egitmen}</td>
-                    <td className="py-4 pr-4">
-                      <span
-                        className={`${mono.className} inline-block text-[10px] uppercase tracking-widest border-2 border-dashed rounded-full px-3 py-1 -rotate-3 ${durumStil[e.durum]}`}
-                      >
-                        {e.durum}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {egitimler.map((e) => {
+                  const ucretsiz = ucretMetni(e.ucret) === "ÜCRETSİZ"
+                  return (
+                    <tr key={e.id} className="border-b border-[#0E1A2B]/8 hover:bg-[#EEF1EC]/50 transition-colors">
+                      <td className="py-4 pr-4">
+                        <span className={`${mono.className} inline-block text-[11px] bg-[#0E2A47] text-white rounded px-2 py-1`}>
+                          {e.kurum}
+                        </span>
+                      </td>
+                      <td className="py-4 pr-4 text-sm">{e.egitim}</td>
+                      <td className={`${mono.className} py-4 pr-4 text-sm text-[#0E1A2B]/70`}>{formatTarih(e.tarih, e.saat)}</td>
+                      <td className="py-4 pr-4 text-sm">{e.egitmen}</td>
+                      <td className="py-4 pr-4">
+                        <span
+                          className={`${mono.className} inline-block text-[10px] uppercase tracking-widest border-2 border-dashed rounded-full px-3 py-1 -rotate-3 ${
+                            ucretsiz ? "border-emerald-600 text-emerald-700" : "border-[#B5490C] text-[#B5490C]"
+                          }`}
+                        >
+                          {ucretMetni(e.ucret)}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

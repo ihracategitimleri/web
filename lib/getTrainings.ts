@@ -3,19 +3,8 @@ import { supabase } from "./supabaseClient"
 export async function getTrainings() {
   const { data, error } = await supabase
     .from("trainings")
-    .select(`
-      id,
-      title,
-      date,
-      is_online,
-      price,
-      url,
-      image_url,
-      members_only,
-      institutions(name),
-      categories(name)
-    `)
-    .order("date", { ascending: true })
+    .select("id, kurum, egitim, tarih, oturum, saat, yer, egitmen, ucret, link")
+    .order("tarih", { ascending: true })
 
   if (error) {
     console.error("Supabase error:", error)

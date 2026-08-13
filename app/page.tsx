@@ -62,7 +62,7 @@ export default async function Home() {
       </header>
 
       {/* HERO */}
-      <section className="px-6 md:px-10 pt-16 pb-14 md:pt-20 md:pb-20">
+      <section className="px-6 md:px-10 pt-16 pb-14 md:pt-20 md:pb-20 bg-[#FDF0DB]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-[1.15fr_0.85fr] gap-14 items-center">
 
           {/* LEFT */}
@@ -103,9 +103,9 @@ export default async function Home() {
             <Image
               src="/heroo.png"
               alt="İhracat Eğitimleri"
-              width={320}
-              height={320}
-              className="w-64 h-64 md:w-80 md:h-80 object-contain"
+              width={640}
+              height={640}
+              className="w-[32rem] h-[32rem] md:w-[40rem] md:h-[40rem] object-contain"
               priority
             />
           </div>

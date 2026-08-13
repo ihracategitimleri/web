@@ -1,6 +1,6 @@
-import Image from "next/image"
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google"
 import { getTrainings } from "@/lib/getTrainings"
+import HeroNewsletterForm from "@/app/components/HeroNewsletterForm"
 
 export const dynamic = 'force-dynamic'
 
@@ -33,14 +33,6 @@ function ucretMetni(ucret: string | null) {
 export default async function Home() {
   const egitimler = await getTrainings()
 
-  const kurumSayisi = new Set(egitimler.map((e) => e.kurum)).size
-  const aktifEgitimSayisi = egitimler.length
-  const now = new Date()
-  const buAyPlanlanan = egitimler.filter((e) => {
-    const [y, m] = e.tarih.split("-").map(Number)
-    return y === now.getFullYear() && m === now.getMonth() + 1
-  }).length
-
   return (
     <div className={`${body.className} min-h-screen flex flex-col bg-[#EEF1EC] text-[#0E1A2B]`}>
 
@@ -62,52 +54,34 @@ export default async function Home() {
       </header>
 
       {/* HERO */}
-      <section className="px-6 md:px-10 pt-16 pb-14 md:pt-20 md:pb-20 bg-[#FDF0DB]">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-[1.15fr_0.85fr] gap-14 items-center">
+      <section className="px-6 md:px-10 pt-20 pb-20 md:pt-28 md:pb-28 bg-[#B3C0C8]">
+        <div className="max-w-2xl mx-auto flex flex-col items-center text-center">
+          <h1 className={`${display.className} text-4xl md:text-6xl leading-[1.1] font-semibold mb-6 text-[#0E1A2B]`}>
+            Tüm İhracat Eğitimleri.
+            <br />
+            Tek Portalda.
+          </h1>
+          <p className="text-base md:text-lg text-[#0E1A2B]/75 leading-relaxed max-w-xl mb-10">
+            İhracatçı Birlikleri, Odalar, OSB&apos;ler, Teknokentler...
+            <br />
+            Tüm kurumların ihracat eğitimleri tek bir adreste.
+            <br />
+            Hemen mail listesine üye ol, haftalık eğitimler her Pazartesi 8:00&apos;da mailinde.
+          </p>
 
-          {/* LEFT */}
-          <div>
-            <span className={`${mono.className} inline-block text-[11px] uppercase tracking-[0.2em] text-[#B5490C] border border-[#B5490C]/40 rounded-full px-3 py-1 mb-6`}>
-              Tek çatı · Tüm kurumlar
+          <HeroNewsletterForm monoClassName={mono.className} />
+
+          <div className="flex items-start gap-2.5 mt-6 max-w-md text-left">
+            <span
+              className={`${mono.className} flex-shrink-0 w-4 h-4 mt-0.5 rounded-full border border-[#0E2A47]/50 text-[#0E2A47] flex items-center justify-center text-[10px] font-semibold`}
+            >
+              !
             </span>
-            <h1 className={`${display.className} text-4xl md:text-[3.25rem] leading-[1.08] font-semibold mb-6`}>
-              Türkiye'nin ihracat
-              <br />
-              eğitim manifestosu
-            </h1>
-            <p className="text-base md:text-lg text-[#0E1A2B]/70 max-w-md mb-10">
-              TOBB, TİM, DEİK, Ticaret Bakanlığı ve odaların eğitimlerini
-              tek listede topluyor, kuruma göre değil ihtiyacına göre
-              filtrelemene yardımcı oluyoruz.
+            <p className="text-[11px] leading-relaxed text-[#0E1A2B]/60">
+              Size sadece pazartesileri 08:00&apos;da tek bir mail ileteceğiz, başka bir
+              mail atmayacağız. Mailinizi başka amaçlarla kullanmayacak, 3. partilerle
+              kesinlikle paylaşmayacağız.
             </p>
-
-            {/* STAT LEDGER */}
-            <div className={`${mono.className} flex flex-wrap gap-x-8 gap-y-3 text-sm border-t border-b border-[#0E1A2B]/10 py-4 max-w-lg`}>
-              <div>
-                <span className="text-xl font-medium">{kurumSayisi}</span>
-                <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Kurum</span>
-              </div>
-              <div>
-                <span className="text-xl font-medium">{aktifEgitimSayisi}</span>
-                <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Aktif eğitim</span>
-              </div>
-              <div>
-                <span className="text-xl font-medium">{buAyPlanlanan}</span>
-                <span className="block text-[10px] uppercase tracking-widest text-[#0E1A2B]/50 mt-1">Bu ay planlanan eğitim</span>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT — HERO IMAGE */}
-          <div className="flex justify-center md:justify-end">
-            <Image
-              src="/heroo.png"
-              alt="İhracat Eğitimleri"
-              width={640}
-              height={640}
-              className="w-[32rem] h-[32rem] md:w-[40rem] md:h-[40rem] object-contain"
-              priority
-            />
           </div>
         </div>
       </section>

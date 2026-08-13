@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google"
 import { getTrainings } from "@/lib/getTrainings"
 
@@ -42,19 +43,6 @@ export default async function Home() {
 
   return (
     <div className={`${body.className} min-h-screen flex flex-col bg-[#EEF1EC] text-[#0E1A2B]`}>
-      <style>{`
-        @keyframes seal-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .seal-ring {
-          animation: seal-spin 40s linear infinite;
-          transform-origin: 50% 50%;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .seal-ring { animation: none; }
-        }
-      `}</style>
 
       {/* HEADER */}
       <header className="w-full px-6 md:px-10 py-4 flex items-center justify-between bg-[#0E2A47] text-white">
@@ -110,37 +98,16 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* RIGHT — SEAL ILLUSTRATION */}
+          {/* RIGHT — HERO IMAGE */}
           <div className="flex justify-center md:justify-end">
-            <svg viewBox="0 0 320 320" className="w-64 h-64 md:w-80 md:h-80">
-              <g className="seal-ring">
-                <circle cx="160" cy="160" r="150" fill="none" stroke="#0E2A47" strokeWidth="1.5" strokeDasharray="2 6" />
-                <path id="ringPath" d="M 160,160 m -128,0 a 128,128 0 1,1 256,0 a 128,128 0 1,1 -256,0" fill="none" />
-                <text className={mono.className} fontSize="11" letterSpacing="3" fill="#0E2A47">
-                  <textPath href="#ringPath" startOffset="0%">
-                    TÜRKİYE İHRACAT AĞI • TOBB • TİM • DEİK • TİCARET BAKANLIĞI •
-                  </textPath>
-                </text>
-              </g>
-              <circle cx="160" cy="160" r="96" fill="none" stroke="#0E2A47" strokeWidth="1.5" />
-              {/* crate icon */}
-              <g stroke="#B5490C" strokeWidth="3" fill="none" strokeLinejoin="round">
-                <rect x="115" y="130" width="90" height="66" />
-                <line x1="115" y1="152" x2="205" y2="152" />
-                <line x1="160" y1="130" x2="160" y2="196" />
-              </g>
-              <text
-                x="160"
-                y="228"
-                textAnchor="middle"
-                className={mono.className}
-                fontSize="10"
-                letterSpacing="2"
-                fill="#0E1A2B"
-              >
-                EST. 2026
-              </text>
-            </svg>
+            <Image
+              src="/heroo.png"
+              alt="İhracat Eğitimleri"
+              width={320}
+              height={320}
+              className="w-64 h-64 md:w-80 md:h-80 object-contain"
+              priority
+            />
           </div>
         </div>
       </section>

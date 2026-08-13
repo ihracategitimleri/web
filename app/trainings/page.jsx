@@ -1,5 +1,7 @@
 import { supabase } from "@/lib/supabaseClient"
 
+export const dynamic = 'force-dynamic'
+
 export default async function TrainingsPage() {
   const { data: trainings } = await supabase
     .from("trainings")

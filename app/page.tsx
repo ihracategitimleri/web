@@ -1,6 +1,8 @@
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google"
 import { getTrainings } from "@/lib/getTrainings"
 
+export const dynamic = 'force-dynamic'
+
 const display = Space_Grotesk({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
